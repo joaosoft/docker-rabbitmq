@@ -1,0 +1,40 @@
+version: '3.3'
+
+services:
+
+  rabbitmq.federation:
+    image:          rabbitmq:latest
+    container_name: rabbitmq.federation
+    hostname: rabbitmq.federation
+    environment:
+      RABBITMQ_DEFAULT_VHOST: "dev"
+      RABBITMQ_DEFAULT_USER:  "user"
+      RABBITMQ_DEFAULT_PASS:  "password"
+    volumes:
+      - "${DOCKER_ENV_DEV_RABBITMQ_DATA_PATH}/slave:/var/lib/rabbitmq:rw"
+      - "./plugins/enabled_plugins:/etc/rabbitmq/enabled_plugins"
+    ports:
+      - 15671:15672
+      - 5671:5672
+    networks:
+      default:
+        aliases:
+          - rabbitmq.federation
+
+  rabbitmq.simple:
+    image:          rabbitmq:latest
+    container_name: rabbitmq.simple
+    hostname: rabbitmq.simple
+    environment:
+      RABBITMQ_DEFAULT_VHOST: "dev"
+      RABBITMQ_DEFAULT_USER:  "user"
+      RABBITMQ_DEFAULT_PASS:  "password"
+    volumes:
+      - "${DOCKER_ENV_DEV_RABBITMQ_DATA_PATH}/master:/var/lib/rabbitmq:rw"
+    ports:
+      - 15672:15672
+      - 5672:5672
+    networks:
+      default:
+        aliases:
+          - rabbitmq.simple
